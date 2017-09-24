@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Form Validation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body align="center">
+        <label for=""><b>INSERT EMPLOYEE DETAILS</b></label><br/><br/>
+        <input type="text" id="name" name="name" placeholder="Enter the name"><br/><br/>
+        <input type="text" id="dept" name="dept" placeholder="Enter the Department"><br/><br/>
+        <input type="text" id="mail" name="mail" placeholder="Enter the Email Id"><br/><br/>
+        <input type="text" id="mobi" name="mobi" placeholder="Enter the Mobile Number"><br/><br/>
+        <button id="insertBtn">INSERT</button><br/><br/>
+        <button id="fetchBtn">FETCH</button>
+        <div class="table" id="table"></div>
+    </body>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+        function isEmail(email){
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }   
+        $(document).ready(function(){
+            $('#insertBtn').click(function(){
+                var name = $('#name').val();
+                var dept = $('#dept').val();
+                var mail = $('#mail').val();
+                var mobi = $('#mobi').val();
+                if(name == "" || dept == "" || mail == "" || mobi == ""){
+                    alert ("Please fill all the fields");
+                }
+                else if(mobi.length > 10 || mobi.length < 10){
+                    alert ("Please enter the valid mobile number");
+                }
+                else if(!isEmail(mail)){
+                    alert ("Please enter the valid email");
+                }
+                else {
+                    var dataString = "name="+name+"&dept="+dept+"&mail="+mail+"&mobi="+mobi;
+                    $.ajax({
+                        url  : "insert.php",
+                        type : 'POST',
+                        data : dataString,
+                        success : function(result){
+                            alert(result);
+                        }
+                    });
+                }
+            });
+            $('#fetchBtn').click(function(){
+                $.ajax({
+                    url : 'fetch.php',
+                    type : 'POST',
+                    success : function(data){
+                        $('#table').html(data);
+                    }
+                });
+            });
+        });
+    </script>
+</html>
